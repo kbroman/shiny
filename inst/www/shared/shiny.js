@@ -492,6 +492,7 @@
       };
       socket.onclose = function() {
         $(document.body).addClass('disconnected');
+        self.$notifyParent('disconnected');
       };
       return socket;
     };
@@ -507,6 +508,23 @@
       $.extend(this.$inputValues, values);
       this.$updateConditionals();
     };
+
+    this.notifyParent = function(notification) {
+
+      // function to check for a localhost url
+      isLocalhostUrl = function(url) {
+        return url && url.match('^http://(127\.0\.0\.1|localhost)')
+      }
+
+      // Determine if are in an iframe and if so what the parent url is
+      var parentUrl = (parent !== window) ? document.referrer : null;
+
+      // if we are in an iframe then send the notification only if both
+      // the application and it's parent are on localhost
+      if (isLocalhostUrl(parentUrl) && isLocalhostUrl(window.location.href)) {
+          parent.postMessage(notification, "*");
+      }
+    }
 
     // NB: Including blobs will cause IE to break!
     // TODO: Make blobs work with Internet Explorer
