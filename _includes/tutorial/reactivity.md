@@ -143,7 +143,7 @@ shinyServer(function(input, output) {
     summary(dataset)
   })
 
-  # The output$view depends on both the databaseInput reactive expression
+  # The output$view depends on both the datasetInput reactive expression
   # and input$obs, so will be re-executed whenever input$dataset or 
   # input$obs is changed. 
   output$view <- renderTable({
